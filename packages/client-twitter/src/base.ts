@@ -168,19 +168,40 @@ export class ClientBase extends EventEmitter {
         if (!username) {
             throw new Error("Twitter username not configured");
         }
-        // Check for Twitter cookies
-        if (cookies) {
-            elizaLogger.debug("Using cookies from settings");
-            const cookiesArray = JSON.parse(cookies);
 
-            await this.setCookiesFromArray(cookiesArray);
+        const authToken = this.runtime.getSetting("TWITTER_COOKIES_AUTH_TOKEN");
+        const ct0 = this.runtime.getSetting("TWITTER_COOKIES_CT0");
+        const guestId = this.runtime.getSetting("TWITTER_COOKIES_GUEST_ID");
+
+        const createTwitterCookies = (authToken: string, ct0: string, guestId: string) =>
+        authToken && ct0 && guestId
+            ? [
+                { key: 'auth_token', value: authToken, domain: '.twitter.com' },
+                { key: 'ct0', value: ct0, domain: '.twitter.com' },
+                { key: 'guest_id', value: guestId, domain: '.twitter.com' },
+            ]
+            : null;
+
+        const cachedCookies = await this.getCachedCookies(username) || createTwitterCookies(authToken, ct0, guestId);
+
+        if (cachedCookies) {
+            elizaLogger.info("Using cached cookies");
+            await this.setCookiesFromArray(cachedCookies);
         } else {
-            elizaLogger.debug("No cookies found in settings");
-            elizaLogger.debug("Checking for cached cookies");
-            const cachedCookies = await this.getCachedCookies(username);
-            if (cachedCookies) {
-                await this.setCookiesFromArray(cachedCookies);
-            }
+          // Check for Twitter cookies
+          if (cookies) {
+              elizaLogger.debug("Using cookies from settings");
+              const cookiesArray = JSON.parse(cookies);
+
+              await this.setCookiesFromArray(cookiesArray);
+          } else {
+              elizaLogger.debug("No cookies found in settings");
+              elizaLogger.debug("Checking for cached cookies");
+              const cachedCookies = await this.getCachedCookies(username);
+              if (cachedCookies) {
+                  await this.setCookiesFromArray(cachedCookies);
+              }
+          }
         }
 
         elizaLogger.log("Waiting for Twitter login");
