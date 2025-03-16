@@ -40,6 +40,19 @@ COPY . .
 # Install dependencies
 RUN pnpm install --no-frozen-lockfile
 
+# Manually apply the patch
+RUN echo "Manually patching @solana-developers/helpers" && \
+    TARGET_FILE="/app/node_modules/@solana-developers/helpers/dist/esm/lib/transaction.js" && \
+    if [ -f "$TARGET_FILE" ]; then \
+        # Applying patch manually with sed
+        sed -i 's/import { Program, AnchorProvider, EventParser, BorshAccountsCoder, BorshInstructionCoder, BN, } from "@coral-xyz\/anchor";/import pkg from "@coral-xyz\/anchor";\nconst { Program, AnchorProvider, EventParser, BorshAccountsCoder, BorshInstructionCoder, BN, } = pkg;/g' "$TARGET_FILE" && \
+        # Verify the patch worked
+        grep -A 2 "import pkg from" "$TARGET_FILE" && \
+        echo "Manual patching successful!"; \
+    else \
+        echo "ERROR: Target file not found!" && exit 1; \
+    fi
+
 # Build the project
 RUN pnpm run build && pnpm prune --prod
 

@@ -62,7 +62,8 @@
     },
     "patchedDependencies": {
       "@solana-developers/helpers": "patches/@solana-developers__helpers.patch"
-    }
+    },
+    "allowNonAppliedPatches": true
   },
   "engines": {
     "node": "23.3.0"
