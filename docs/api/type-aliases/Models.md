@@ -52,6 +52,10 @@ Model configurations by provider
 
 > **redpill**: [`Model`](Model.md)
 
+### mira
+
+> **mira**: [`Model`](Model.md)
+
 ### openrouter
 
 > **openrouter**: [`Model`](Model.md)

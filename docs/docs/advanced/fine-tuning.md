@@ -24,6 +24,7 @@ enum ModelProviderName {
     GOOGLE,
     MISTRAL,
     REDPILL,
+    MIRA,
     OPENROUTER,
     HEURIST,
     LIVEPEER,

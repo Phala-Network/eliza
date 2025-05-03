@@ -116,6 +116,16 @@ Available model providers
 
 ---
 
+### MIRA
+
+> **MIRA**: `"mira"`
+
+#### Defined in
+
+[packages/core/src/types.ts:236](https://github.com/elizaOS/eliza/blob/main/packages/core/src/types.ts#L236)
+
+---
+
 ### OPENROUTER
 
 > **OPENROUTER**: `"openrouter"`
