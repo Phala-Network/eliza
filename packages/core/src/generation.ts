@@ -897,6 +897,37 @@ export async function generateText({
                 break;
             }
 
+            case ModelProviderName.MIRA: {
+                elizaLogger.debug("Initializing Mira model.");
+                const serverUrl = getEndpoint(provider);
+                const openai = createOpenAI({
+                    apiKey,
+                    baseURL: serverUrl,
+                    fetch: runtime.fetch,
+                });
+
+                const { text: miraResponse } = await aiGenerateText({
+                    model: openai.languageModel(model),
+                    prompt: context,
+                    temperature: temperature,
+                    system:
+                        runtime.character.system ??
+                        settings.SYSTEM_PROMPT ??
+                        undefined,
+                    tools: tools,
+                    onStepFinish: onStepFinish,
+                    maxSteps: maxSteps,
+                    maxTokens: max_response_length,
+                    frequencyPenalty: frequency_penalty,
+                    presencePenalty: presence_penalty,
+                    experimental_telemetry: experimental_telemetry,
+                });
+
+                response = miraResponse;
+                elizaLogger.debug("Received response from mira model.");
+                break;
+            }
+
             case ModelProviderName.OPENROUTER: {
                 elizaLogger.debug("Initializing OpenRouter model.");
                 const serverUrl = getEndpoint(provider);
@@ -2204,6 +2235,8 @@ export async function handleProvider(
             return await handleMistral(options);
         case ModelProviderName.REDPILL:
             return await handleRedPill(options);
+        case ModelProviderName.MIRA:
+            return await handleMira(options);
         case ModelProviderName.OPENROUTER:
             return await handleOpenRouter(options);
         case ModelProviderName.OLLAMA:
@@ -2411,6 +2444,32 @@ async function handleRedPill({
     const redPill = createOpenAI({ apiKey, baseURL: models.redpill.endpoint });
     return await aiGenerateObject({
         model: redPill.languageModel(model),
+        schema,
+        schemaName,
+        schemaDescription,
+        mode,
+        ...modelOptions,
+    });
+}
+
+/**
+ * Handles object generation for Mira models.
+ *
+ * @param {ProviderOptions} options - Options specific to Mira.
+ * @returns {Promise<GenerateObjectResult<unknown>>} - A promise that resolves to generated objects.
+ */
+async function handleMira({
+    model,
+    apiKey,
+    schema,
+    schemaName,
+    schemaDescription,
+    mode = "json",
+    modelOptions,
+}: ProviderOptions): Promise<GenerateObjectResult<unknown>> {
+    const mira = createOpenAI({ apiKey, baseURL: models.mira.endpoint });
+    return await aiGenerateObject({
+        model: mira.languageModel(model),
         schema,
         schemaName,
         schemaDescription,

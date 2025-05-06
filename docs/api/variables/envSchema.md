@@ -38,6 +38,10 @@ API Keys with specific formats
 
 > **ELEVENLABS_XI_API_KEY**: `ZodString`
 
+### MIRA_API_KEY
+
+> **MIRA_API_KEY**: `ZodString`
+
 ## Defined in
 
 [packages/core/src/environment.ts:5](https://github.com/elizaOS/eliza/blob/main/packages/core/src/environment.ts#L5)

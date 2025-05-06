@@ -495,6 +495,54 @@ export const models: Models = {
             },
         },
     },
+    [ModelProviderName.MIRA]: {
+        endpoint: "https://api.mira.network/v1",
+        // Available models: https://api.mira.network/v1/models
+        // To test other models, change the models below
+        model: {
+            [ModelClass.SMALL]: {
+                name:
+                    settings.SMALL_MIRA_MODEL ||
+                    settings.MIRA_MODEL ||
+                    "gpt-4o-mini",
+                stop: [],
+                maxInputTokens: 128000,
+                maxOutputTokens: 8192,
+                frequency_penalty: 0.0,
+                presence_penalty: 0.0,
+                temperature: 0.6,
+            },
+            [ModelClass.MEDIUM]: {
+                name:
+                    settings.MEDIUM_MIRA_MODEL ||
+                    settings.MIRA_MODEL ||
+                    "gpt-4o",
+                stop: [],
+                maxInputTokens: 128000,
+                maxOutputTokens: 8192,
+                frequency_penalty: 0.0,
+                presence_penalty: 0.0,
+                temperature: 0.6,
+            },
+
+            [ModelClass.LARGE]: {
+                name:
+                    settings.LARGE_MIRA_MODEL ||
+                    settings.MIRA_MODEL ||
+                    "gpt-4o",
+                stop: [],
+                maxInputTokens: 128000,
+                maxOutputTokens: 8192,
+                frequency_penalty: 0.0,
+                presence_penalty: 0.0,
+                temperature: 0.6,
+            },
+
+            [ModelClass.EMBEDDING]: {
+                name: "text-embedding-3-small",
+            },
+        },
+    },
     [ModelProviderName.OPENROUTER]: {
         endpoint: "https://openrouter.ai/api/v1",
         // Available models: https://openrouter.ai/models

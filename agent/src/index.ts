@@ -571,6 +571,11 @@ export function getTokenForProvider(
                 character.settings?.secrets?.REDPILL_API_KEY ||
                 settings.REDPILL_API_KEY
             );
+        case ModelProviderName.MIRA:
+            return (
+                character.settings?.secrets?.MIRA_API_KEY ||
+                settings.MIRA_API_KEY
+            );
         case ModelProviderName.OPENROUTER:
             return (
                 character.settings?.secrets?.OPENROUTER_API_KEY ||
