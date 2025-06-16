@@ -1193,7 +1193,8 @@ export async function generateText({
                     maxTokens: max_response_length,
                 });
 
-                response = veniceResponse;
+                response = veniceResponse
+                    .replace(/<think>[\s\S]*?<\/think>\s*\n*/g, '');
                 elizaLogger.debug("Received response from Venice model.");
                 break;
             }
